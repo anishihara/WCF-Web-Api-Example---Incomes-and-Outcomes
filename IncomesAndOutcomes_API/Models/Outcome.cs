@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IncomesAndOutcomes.Models
+namespace IncomesAndOutcomes_API.Models
 {
     public class Outcome
     {

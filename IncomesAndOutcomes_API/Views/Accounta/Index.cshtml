@@ -1,0 +1,47 @@
+@model IEnumerable<IncomesAndOutcomes.Models.Account>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Name
+        </th>
+        <th>
+            IsDeleted
+        </th>
+        <th>
+            AccountBalances
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.AccountId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.AccountId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.AccountId })
+        </td>
+        <td>
+			@item.Name
+        </td>
+        <td>
+			@item.IsDeleted
+        </td>
+        <td>
+			@(item.AccountBalances == null ? "None" : item.AccountBalances.Count.ToString())
+        </td>
+    </tr>
+}
+
+</table>
+
+

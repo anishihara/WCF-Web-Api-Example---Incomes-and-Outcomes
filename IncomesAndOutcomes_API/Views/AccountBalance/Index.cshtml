@@ -1,0 +1,71 @@
+@model IEnumerable<IncomesAndOutcomes.Models.AccountBalance>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Balance
+        </th>
+        <th>
+            Date
+        </th>
+        <th>
+            IsDeleted
+        </th>
+        <th>
+            IsActive
+        </th>
+        <th>
+            Account
+        </th>
+        <th>
+            Incomes
+        </th>
+        <th>
+            Outcomes
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.AccountBalanceId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.AccountBalanceId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.AccountBalanceId })
+        </td>
+        <td>
+			@item.Balance
+        </td>
+        <td>
+			@String.Format("{0:g}", item.Date)
+        </td>
+        <td>
+			@item.IsDeleted
+        </td>
+        <td>
+			@item.IsActive
+        </td>
+        <td>
+			@(item.Account == null ? "None" : item.Account.Name)
+        </td>
+        <td>
+			@(item.Incomes == null ? "None" : item.Incomes.Count.ToString())
+        </td>
+        <td>
+			@(item.Outcomes == null ? "None" : item.Outcomes.Count.ToString())
+        </td>
+    </tr>
+}
+
+</table>
+
+

@@ -1,0 +1,35 @@
+@model IncomesAndOutcomes.Models.MonthBuffer
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>MonthBuffer</legend>
+
+    <div class="display-label">LastBuffer</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.LastBuffer).ToString()</div>
+
+    <div class="display-label">Incomes</div>
+    <div class="display-field">@(Model.Incomes == null ? "None" : Model.Incomes.Count.ToString())</div>
+
+    <div class="display-label">Budgets</div>
+    <div class="display-field">@(Model.Budgets == null ? "None" : Model.Budgets.Count.ToString())</div>
+
+    <div class="display-label">Month</div>
+    <div class="display-field">@Model.Month</div>
+
+    <div class="display-label">Year</div>
+    <div class="display-field">@Model.Year</div>
+
+    <div class="display-label">Amount</div>
+    <div class="display-field">@Model.Amount</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.MonthBufferId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

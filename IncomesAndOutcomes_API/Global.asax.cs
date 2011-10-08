@@ -4,6 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using IncomesAndOutcomes_API.API;
+using System.ServiceModel.Activation;
+using Microsoft.ApplicationServer.Http.Activation;
+using Microsoft.ApplicationServer.Http;
 
 namespace IncomesAndOutcomes_API
 {
@@ -20,6 +24,10 @@ namespace IncomesAndOutcomes_API
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            var config = new HttpConfiguration() { EnableTestClient = true };
+
+            routes.Add(new ServiceRoute("api/accounts", new HttpServiceHostFactory() { Configuration = config }, typeof(AccountsAPI)));
 
             routes.MapRoute(
                 "Default", // Route name

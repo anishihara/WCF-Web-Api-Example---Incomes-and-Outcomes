@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 
-namespace IncomesAndOutcomes.Models
+namespace IncomesAndOutcomes_API.Models
 {
     public class MonthBuffer
     {

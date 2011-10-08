@@ -1,0 +1,47 @@
+@model IncomesAndOutcomes.Models.AccountBalance
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Balance)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Balance)
+    @Html.ValidationMessageFor(model => model.Balance)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Date)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Date)
+    @Html.ValidationMessageFor(model => model.Date)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.IsDeleted)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.IsDeleted)
+    @Html.ValidationMessageFor(model => model.IsDeleted)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.IsActive)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.IsActive)
+    @Html.ValidationMessageFor(model => model.IsActive)
+</div>
+
+<div class="editor-label">
+    Account
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.AccountId, ((IEnumerable<IncomesAndOutcomes.Models.Account>)ViewBag.PossibleAccounts).Select(option => new SelectListItem {
+        Text = (option == null ? "None" : option.Name), 
+        Value = option.AccountId.ToString(),
+        Selected = (Model != null) && (option.AccountId == Model.AccountId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.AccountId)
+</div>

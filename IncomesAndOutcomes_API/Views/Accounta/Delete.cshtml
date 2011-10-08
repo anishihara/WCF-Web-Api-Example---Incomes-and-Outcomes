@@ -1,0 +1,29 @@
+@model IncomesAndOutcomes.Models.Account
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Account</legend>
+
+    <div class="display-label">Name</div>
+    <div class="display-field">@Model.Name</div>
+
+    <div class="display-label">IsDeleted</div>
+    <div class="display-field">@Model.IsDeleted</div>
+
+    <div class="display-label">AccountBalances</div>
+    <div class="display-field">@(Model.AccountBalances == null ? "None" : Model.AccountBalances.Count.ToString())</div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+
+

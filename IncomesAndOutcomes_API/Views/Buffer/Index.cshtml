@@ -1,0 +1,65 @@
+@model IEnumerable<IncomesAndOutcomes.Models.MonthBuffer>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            LastBuffer
+        </th>
+        <th>
+            Incomes
+        </th>
+        <th>
+            Budgets
+        </th>
+        <th>
+            Month
+        </th>
+        <th>
+            Year
+        </th>
+        <th>
+            Amount
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MonthBufferId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.MonthBufferId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.MonthBufferId })
+        </td>
+        <td>
+			@Html.DisplayTextFor(_ => item.LastBuffer).ToString()
+        </td>
+        <td>
+			@(item.Incomes == null ? "None" : item.Incomes.Count.ToString())
+        </td>
+        <td>
+			@(item.Budgets == null ? "None" : item.Budgets.Count.ToString())
+        </td>
+        <td>
+			@item.Month
+        </td>
+        <td>
+			@item.Year
+        </td>
+        <td>
+			@item.Amount
+        </td>
+    </tr>
+}
+
+</table>
+
+

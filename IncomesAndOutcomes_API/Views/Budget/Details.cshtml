@@ -1,0 +1,41 @@
+@model IncomesAndOutcomes.Models.Budget
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Budget</legend>
+
+    <div class="display-label">MonthBuffer</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.MonthBuffer).ToString()</div>
+
+    <div class="display-label">Category</div>
+    <div class="display-field">@(Model.Category == null ? "None" : Model.Category.Name)</div>
+
+    <div class="display-label">Outcomes</div>
+    <div class="display-field">@(Model.Outcomes == null ? "None" : Model.Outcomes.Count.ToString())</div>
+
+    <div class="display-label">Amount</div>
+    <div class="display-field">@Model.Amount</div>
+
+    <div class="display-label">Month</div>
+    <div class="display-field">@Model.Month</div>
+
+    <div class="display-label">Year</div>
+    <div class="display-field">@Model.Year</div>
+
+    <div class="display-label">IsDeleted</div>
+    <div class="display-field">@Model.IsDeleted</div>
+
+    <div class="display-label">IsActive</div>
+    <div class="display-field">@Model.IsActive</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.BudgetId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

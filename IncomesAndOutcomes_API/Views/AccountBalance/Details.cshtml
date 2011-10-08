@@ -1,0 +1,38 @@
+@model IncomesAndOutcomes.Models.AccountBalance
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>AccountBalance</legend>
+
+    <div class="display-label">Balance</div>
+    <div class="display-field">@Model.Balance</div>
+
+    <div class="display-label">Date</div>
+    <div class="display-field">@String.Format("{0:g}", Model.Date)</div>
+
+    <div class="display-label">IsDeleted</div>
+    <div class="display-field">@Model.IsDeleted</div>
+
+    <div class="display-label">IsActive</div>
+    <div class="display-field">@Model.IsActive</div>
+
+    <div class="display-label">Account</div>
+    <div class="display-field">@(Model.Account == null ? "None" : Model.Account.Name)</div>
+
+    <div class="display-label">Incomes</div>
+    <div class="display-field">@(Model.Incomes == null ? "None" : Model.Incomes.Count.ToString())</div>
+
+    <div class="display-label">Outcomes</div>
+    <div class="display-field">@(Model.Outcomes == null ? "None" : Model.Outcomes.Count.ToString())</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.AccountBalanceId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

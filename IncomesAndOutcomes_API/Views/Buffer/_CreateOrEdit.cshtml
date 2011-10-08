@@ -1,0 +1,39 @@
+@model IncomesAndOutcomes.Models.MonthBuffer
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Month)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Month)
+    @Html.ValidationMessageFor(model => model.Month)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Year)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Year)
+    @Html.ValidationMessageFor(model => model.Year)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Amount)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Amount)
+    @Html.ValidationMessageFor(model => model.Amount)
+</div>
+
+<div class="editor-label">
+    LastBuffer
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.LastBufferId, ((IEnumerable<IncomesAndOutcomes.Models.MonthBuffer>)ViewBag.PossibleLastBuffers).Select(option => new SelectListItem {
+        Text = Html.DisplayTextFor(_ => option).ToString(), 
+        Value = option.MonthBufferId.ToString(),
+        Selected = (Model != null) && (option.MonthBufferId == Model.LastBufferId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.LastBufferId)
+</div>

@@ -1,0 +1,38 @@
+@model IncomesAndOutcomes.Models.MonthBuffer
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>MonthBuffer</legend>
+
+    <div class="display-label">LastBuffer</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.LastBuffer).ToString()</div>
+
+    <div class="display-label">Incomes</div>
+    <div class="display-field">@(Model.Incomes == null ? "None" : Model.Incomes.Count.ToString())</div>
+
+    <div class="display-label">Budgets</div>
+    <div class="display-field">@(Model.Budgets == null ? "None" : Model.Budgets.Count.ToString())</div>
+
+    <div class="display-label">Month</div>
+    <div class="display-field">@Model.Month</div>
+
+    <div class="display-label">Year</div>
+    <div class="display-field">@Model.Year</div>
+
+    <div class="display-label">Amount</div>
+    <div class="display-field">@Model.Amount</div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+
+

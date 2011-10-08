@@ -1,0 +1,77 @@
+@model IEnumerable<IncomesAndOutcomes.Models.Budget>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            MonthBuffer
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            Outcomes
+        </th>
+        <th>
+            Amount
+        </th>
+        <th>
+            Month
+        </th>
+        <th>
+            Year
+        </th>
+        <th>
+            IsDeleted
+        </th>
+        <th>
+            IsActive
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.BudgetId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.BudgetId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.BudgetId })
+        </td>
+        <td>
+			@Html.DisplayTextFor(_ => item.MonthBuffer).ToString()
+        </td>
+        <td>
+			@(item.Category == null ? "None" : item.Category.Name)
+        </td>
+        <td>
+			@(item.Outcomes == null ? "None" : item.Outcomes.Count.ToString())
+        </td>
+        <td>
+			@item.Amount
+        </td>
+        <td>
+			@item.Month
+        </td>
+        <td>
+			@item.Year
+        </td>
+        <td>
+			@item.IsDeleted
+        </td>
+        <td>
+			@item.IsActive
+        </td>
+    </tr>
+}
+
+</table>
+
+

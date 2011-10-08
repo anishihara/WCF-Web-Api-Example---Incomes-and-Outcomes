@@ -1,0 +1,58 @@
+@model IncomesAndOutcomes.Models.Outcome
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Amount)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Amount)
+    @Html.ValidationMessageFor(model => model.Amount)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Date)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Date)
+    @Html.ValidationMessageFor(model => model.Date)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Memo)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Memo)
+    @Html.ValidationMessageFor(model => model.Memo)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.IsDeleted)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.IsDeleted)
+    @Html.ValidationMessageFor(model => model.IsDeleted)
+</div>
+
+<div class="editor-label">
+    AccountBalance
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.AccountBalanceId, ((IEnumerable<IncomesAndOutcomes.Models.AccountBalance>)ViewBag.PossibleAccountBalances).Select(option => new SelectListItem {
+        Text = Html.DisplayTextFor(_ => option).ToString(), 
+        Value = option.AccountBalanceId.ToString(),
+        Selected = (Model != null) && (option.AccountBalanceId == Model.AccountBalanceId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.AccountBalanceId)
+</div>
+<div class="editor-label">
+    Budget
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.BudgetId, ((IEnumerable<IncomesAndOutcomes.Models.Budget>)ViewBag.PossibleBudgets).Select(option => new SelectListItem {
+        Text = Html.DisplayTextFor(_ => option).ToString(), 
+        Value = option.BudgetId.ToString(),
+        Selected = (Model != null) && (option.BudgetId == Model.BudgetId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.BudgetId)
+</div>

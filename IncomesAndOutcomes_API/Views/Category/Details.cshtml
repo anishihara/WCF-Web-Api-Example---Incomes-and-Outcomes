@@ -1,0 +1,29 @@
+@model IncomesAndOutcomes.Models.Category
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Category</legend>
+
+    <div class="display-label">Budgets</div>
+    <div class="display-field">@(Model.Budgets == null ? "None" : Model.Budgets.Count.ToString())</div>
+
+    <div class="display-label">Name</div>
+    <div class="display-field">@Model.Name</div>
+
+    <div class="display-label">Balance</div>
+    <div class="display-field">@Model.Balance</div>
+
+    <div class="display-label">IsDeleted</div>
+    <div class="display-field">@Model.IsDeleted</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.CategoryId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+
