@@ -41,6 +41,8 @@ namespace IncomesAndOutcomes_API
         {
             AreaRegistration.RegisterAllAreas();
 
+            System.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<IncomesAndOutcomes_API.Models.IncomesAndOutcomes_APIContext>());
+
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
         }

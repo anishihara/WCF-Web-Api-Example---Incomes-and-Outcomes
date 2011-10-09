@@ -26,9 +26,9 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.AccountId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.AccountId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.AccountId })
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
         </td>
         <td>
 			@item.Name
@@ -37,7 +37,7 @@
 			@item.IsDeleted
         </td>
         <td>
-			@(item.AccountBalances == null ? "None" : item.AccountBalances.Count.ToString())
+
         </td>
     </tr>
 }

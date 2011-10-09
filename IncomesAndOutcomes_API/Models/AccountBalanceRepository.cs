@@ -34,7 +34,7 @@ namespace IncomesAndOutcomes_API.Models
 
         public void InsertOrUpdate(AccountBalance accountbalance)
         {
-            if (accountbalance.AccountBalanceId == default(int)) {
+            if (accountbalance.Id == default(int)) {
                 // New entity
                 context.AccountBalances.Add(accountbalance);
             } else {

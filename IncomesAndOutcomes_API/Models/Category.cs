@@ -7,7 +7,7 @@ namespace IncomesAndOutcomes_API.Models
 {
     public class Category
     {
-        public int CategoryId { get; set; }
+        public int Id { get; set; }
         public virtual ICollection<Budget> Budgets { get; set; }
 
         public string Name { get; set; }

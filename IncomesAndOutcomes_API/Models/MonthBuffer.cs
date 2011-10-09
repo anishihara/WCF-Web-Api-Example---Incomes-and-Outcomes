@@ -8,7 +8,7 @@ namespace IncomesAndOutcomes_API.Models
 {
     public class MonthBuffer
     {
-        public int MonthBufferId { get; set; }
+        public int Id { get; set; }
         public int? LastBufferId { get; set; }
         [ForeignKey("LastBufferId")]
         public virtual MonthBuffer LastBuffer { get; set; }

@@ -35,15 +35,23 @@ namespace IncomesAndOutcomes_API.API
                 return null;
             }
         }
+
+        //Na verdade, implementar o account resource
         [WebInvoke (UriTemplate="",Method="POST")]
-        public HttpResponseMessage Post()
+        public HttpResponseMessage Post(Account account)
         {
-            var account = new Account();
-            account.Name = "teste";
-            account.IsDeleted = false;
-            accountRepository.InsertOrUpdate(account);
-            accountRepository.Save();
-            return new HttpResponseMessage();
+            try
+            {
+                accountRepository.InsertOrUpdate(account);
+                accountRepository.Save();
+                return new HttpResponseMessage();
+            }
+            catch
+            {
+                var response = new HttpResponseMessage();
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                return response;
+            }
         }
     }
 }

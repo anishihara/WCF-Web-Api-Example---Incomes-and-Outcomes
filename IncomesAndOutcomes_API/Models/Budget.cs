@@ -7,7 +7,7 @@ namespace IncomesAndOutcomes_API.Models
 {
     public class Budget
     {
-        public int BudgetId { get; set; }
+        public int Id { get; set; }
         public int MonthBufferId { get; set; }
         public virtual MonthBuffer MonthBuffer { get; set; }
         public int CategoryId { get; set; }

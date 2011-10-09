@@ -34,7 +34,7 @@ namespace IncomesAndOutcomes_API.Models
 
         public void InsertOrUpdate(Income income)
         {
-            if (income.IncomeId == default(int)) {
+            if (income.Id == default(int)) {
                 // New entity
                 context.Incomes.Add(income);
             } else {

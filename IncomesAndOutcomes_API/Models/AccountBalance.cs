@@ -7,7 +7,7 @@ namespace IncomesAndOutcomes_API.Models
 {
     public class AccountBalance
     {
-        public int AccountBalanceId {get;set;}
+        public int Id {get;set;}
         public float Balance { get; set; }
         public DateTime Date { get; set; }
         public bool IsDeleted { get; set; }

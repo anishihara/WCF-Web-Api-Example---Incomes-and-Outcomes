@@ -7,7 +7,7 @@ namespace IncomesAndOutcomes_API.Models
 {
     public class Account
     {
-        public int AccountId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
         //public virtual ICollection<AccountBalance> AccountBalances { get; set; }

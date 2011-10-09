@@ -34,7 +34,7 @@ namespace IncomesAndOutcomes_API.Models
 
         public void InsertOrUpdate(Outcome outcome)
         {
-            if (outcome.OutcomeId == default(int)) {
+            if (outcome.Id == default(int)) {
                 // New entity
                 context.Outcomes.Add(outcome);
             } else {

@@ -34,7 +34,7 @@ namespace IncomesAndOutcomes_API.Models
 
         public void InsertOrUpdate(Category category)
         {
-            if (category.CategoryId == default(int)) {
+            if (category.Id == default(int)) {
                 // New entity
                 context.Categories.Add(category);
             } else {

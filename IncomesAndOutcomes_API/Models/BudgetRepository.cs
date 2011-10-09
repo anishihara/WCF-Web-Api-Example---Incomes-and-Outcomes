@@ -34,7 +34,7 @@ namespace IncomesAndOutcomes_API.Models
 
         public void InsertOrUpdate(Budget budget)
         {
-            if (budget.BudgetId == default(int)) {
+            if (budget.Id == default(int)) {
                 // New entity
                 context.Budgets.Add(budget);
             } else {

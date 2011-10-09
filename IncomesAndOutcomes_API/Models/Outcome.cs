@@ -7,7 +7,7 @@ namespace IncomesAndOutcomes_API.Models
 {
     public class Outcome
     {
-        public int OutcomeId { get; set; }
+        public int Id { get; set; }
         public int AccountBalanceId { get; set; }
         public virtual AccountBalance AccountBalance { get; set; }
         public int BudgetId { get; set; }

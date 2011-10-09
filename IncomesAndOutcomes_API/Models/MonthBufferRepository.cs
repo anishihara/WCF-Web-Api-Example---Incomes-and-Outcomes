@@ -34,7 +34,7 @@ namespace IncomesAndOutcomes_API.Models
 
         public void InsertOrUpdate(MonthBuffer monthbuffer)
         {
-            if (monthbuffer.MonthBufferId == default(int)) {
+            if (monthbuffer.Id == default(int)) {
                 // New entity
                 context.MonthBuffers.Add(monthbuffer);
             } else {
