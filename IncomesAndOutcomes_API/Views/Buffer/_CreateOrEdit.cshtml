@@ -1,4 +1,4 @@
-@model IncomesAndOutcomes.Models.MonthBuffer
+@model IncomesAndOutcomes_API.Models.MonthBuffer
 
 @* This partial view defines form fields that will appear when creating and editing entities *@
 
@@ -30,7 +30,7 @@
     LastBuffer
 </div>
 <div class="editor-field">
-    @Html.DropDownListFor(model => model.LastBufferId, ((IEnumerable<IncomesAndOutcomes.Models.MonthBuffer>)ViewBag.PossibleLastBuffers).Select(option => new SelectListItem {
+    @Html.DropDownListFor(model => model.LastBufferId, ((IEnumerable<IncomesAndOutcomes_API.Models.MonthBuffer>)ViewBag.PossibleLastBuffers).Select(option => new SelectListItem {
         Text = Html.DisplayTextFor(_ => option).ToString(), 
         Value = option.MonthBufferId.ToString(),
         Selected = (Model != null) && (option.MonthBufferId == Model.LastBufferId)

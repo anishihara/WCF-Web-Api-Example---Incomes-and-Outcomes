@@ -1,4 +1,4 @@
-@model IncomesAndOutcomes.Models.Budget
+@model IncomesAndOutcomes_API.Models.Budget
 
 @* This partial view defines form fields that will appear when creating and editing entities *@
 
@@ -46,7 +46,7 @@
     MonthBuffer
 </div>
 <div class="editor-field">
-    @Html.DropDownListFor(model => model.MonthBufferId, ((IEnumerable<IncomesAndOutcomes.Models.MonthBuffer>)ViewBag.PossibleMonthBuffers).Select(option => new SelectListItem {
+    @Html.DropDownListFor(model => model.MonthBufferId, ((IEnumerable<IncomesAndOutcomes_API.Models.MonthBuffer>)ViewBag.PossibleMonthBuffers).Select(option => new SelectListItem {
         Text = Html.DisplayTextFor(_ => option).ToString(), 
         Value = option.MonthBufferId.ToString(),
         Selected = (Model != null) && (option.MonthBufferId == Model.MonthBufferId)
@@ -57,7 +57,7 @@
     Category
 </div>
 <div class="editor-field">
-    @Html.DropDownListFor(model => model.CategoryId, ((IEnumerable<IncomesAndOutcomes.Models.Category>)ViewBag.PossibleCategories).Select(option => new SelectListItem {
+    @Html.DropDownListFor(model => model.CategoryId, ((IEnumerable<IncomesAndOutcomes_API.Models.Category>)ViewBag.PossibleCategories).Select(option => new SelectListItem {
         Text = (option == null ? "None" : option.Name), 
         Value = option.CategoryId.ToString(),
         Selected = (Model != null) && (option.CategoryId == Model.CategoryId)

@@ -1,4 +1,4 @@
-@model IncomesAndOutcomes.Models.Outcome
+@model IncomesAndOutcomes_API.Models.Outcome
 
 @* This partial view defines form fields that will appear when creating and editing entities *@
 
@@ -38,7 +38,7 @@
     AccountBalance
 </div>
 <div class="editor-field">
-    @Html.DropDownListFor(model => model.AccountBalanceId, ((IEnumerable<IncomesAndOutcomes.Models.AccountBalance>)ViewBag.PossibleAccountBalances).Select(option => new SelectListItem {
+    @Html.DropDownListFor(model => model.AccountBalanceId, ((IEnumerable<IncomesAndOutcomes_API.Models.AccountBalance>)ViewBag.PossibleAccountBalances).Select(option => new SelectListItem {
         Text = Html.DisplayTextFor(_ => option).ToString(), 
         Value = option.AccountBalanceId.ToString(),
         Selected = (Model != null) && (option.AccountBalanceId == Model.AccountBalanceId)
@@ -49,7 +49,7 @@
     Budget
 </div>
 <div class="editor-field">
-    @Html.DropDownListFor(model => model.BudgetId, ((IEnumerable<IncomesAndOutcomes.Models.Budget>)ViewBag.PossibleBudgets).Select(option => new SelectListItem {
+    @Html.DropDownListFor(model => model.BudgetId, ((IEnumerable<IncomesAndOutcomes_API.Models.Budget>)ViewBag.PossibleBudgets).Select(option => new SelectListItem {
         Text = Html.DisplayTextFor(_ => option).ToString(), 
         Value = option.BudgetId.ToString(),
         Selected = (Model != null) && (option.BudgetId == Model.BudgetId)

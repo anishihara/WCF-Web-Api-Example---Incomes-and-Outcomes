@@ -1,4 +1,4 @@
-@model IncomesAndOutcomes.Models.AccountBalance
+@model IncomesAndOutcomes_API.Models.AccountBalance
 
 @* This partial view defines form fields that will appear when creating and editing entities *@
 
@@ -38,7 +38,7 @@
     Account
 </div>
 <div class="editor-field">
-    @Html.DropDownListFor(model => model.AccountId, ((IEnumerable<IncomesAndOutcomes.Models.Account>)ViewBag.PossibleAccounts).Select(option => new SelectListItem {
+    @Html.DropDownListFor(model => model.AccountId, ((IEnumerable<IncomesAndOutcomes_API.Models.Account>)ViewBag.PossibleAccounts).Select(option => new SelectListItem {
         Text = (option == null ? "None" : option.Name), 
         Value = option.AccountId.ToString(),
         Selected = (Model != null) && (option.AccountId == Model.AccountId)
