@@ -30,5 +30,9 @@ namespace IncomesAndOutcomes_API.Models
         public DbSet<IncomesAndOutcomes_API.Models.MonthBuffer> MonthBuffers { get; set; }
 
         public DbSet<IncomesAndOutcomes_API.Models.Outcome> Outcomes { get; set; }
+
+        public DbSet<IncomesAndOutcomes_API.Models.User> Users { get; set; }
+
+        public DbSet<IncomesAndOutcomes_API.Models.UserSession> UserSessions { get; set; }
     }
 }

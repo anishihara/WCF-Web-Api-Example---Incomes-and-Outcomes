@@ -1,0 +1,31 @@
+@model IncomesAndOutcomes_API.Models.UserSession
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.OpenSessionTime)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.OpenSessionTime)
+    @Html.ValidationMessageFor(model => model.OpenSessionTime)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.EndSessionTime)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.EndSessionTime)
+    @Html.ValidationMessageFor(model => model.EndSessionTime)
+</div>
+
+<div class="editor-label">
+    User
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.UserId, ((IEnumerable<IncomesAndOutcomes_API.Models.User>)ViewBag.PossibleUsers).Select(option => new SelectListItem {
+        Text = Html.DisplayTextFor(_ => option).ToString(), 
+        Value = option.Id.ToString(),
+        Selected = (Model != null) && (option.Id == Model.UserId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.UserId)
+</div>

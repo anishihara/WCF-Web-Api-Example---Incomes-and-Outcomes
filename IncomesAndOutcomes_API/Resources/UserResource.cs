@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace IncomesAndOutcomes_API.Models
+namespace IncomesAndOutcomes_API.Resources
 {
-    public class User
+    public class UserResource
     {
-        public int Id { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
     }

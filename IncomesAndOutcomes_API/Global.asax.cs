@@ -28,6 +28,7 @@ namespace IncomesAndOutcomes_API
             var config = new HttpConfiguration() { EnableTestClient = true };
 
             routes.Add(new ServiceRoute("api/accounts", new HttpServiceHostFactory() { Configuration = config }, typeof(AccountsAPI)));
+            routes.Add(new ServiceRoute("api/auth", new HttpServiceHostFactory() { Configuration = config }, typeof(AuthAPI)));
 
             routes.MapRoute(
                 "Default", // Route name
