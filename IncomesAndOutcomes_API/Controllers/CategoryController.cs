@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using IncomesAndOutcomes_API.Models;
-using IncomesAndOutcomes_API.Models;
 
 namespace IncomesAndOutcomes_API.Controllers
 {   

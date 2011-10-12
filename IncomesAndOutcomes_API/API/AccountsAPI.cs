@@ -4,8 +4,11 @@ using System.Linq;
 using System.Web;
 using System.ServiceModel;
 using IncomesAndOutcomes_API.Models;
+using IncomesAndOutcomes_API.Resources;
 using System.ServiceModel.Web;
 using System.Net.Http;
+using Microsoft.ApplicationServer.Http.Dispatcher;
+using System.Net;
 
 namespace IncomesAndOutcomes_API.API
 {
@@ -13,17 +16,29 @@ namespace IncomesAndOutcomes_API.API
     public class AccountsAPI
     {
         private readonly IAccountRepository accountRepository;
+        private readonly IUserSessionRepository userSessionRepository;
+        private readonly IAccountBalanceRepository accountBalanceRepository;
+        private readonly IIncomeRepository incomeRepository;
+        private readonly IMonthBufferRepository monthBufferRepository;
 
-        public AccountsAPI(): this(new AccountRepository())
-        { 
+        public AccountsAPI()
+            : this(new AccountRepository(), new UserSessionRepository(),
+                new AccountBalanceRepository(), new IncomeRepository(), new MonthBufferRepository())
+        {
         }
 
-        public AccountsAPI(IAccountRepository accountRepository)
+        public AccountsAPI(IAccountRepository accountRepository, IUserSessionRepository userSessionRepository,
+            IAccountBalanceRepository accountBalanceRepository, IIncomeRepository incomeRepository,
+            IMonthBufferRepository monthBufferRepository)
         {
             this.accountRepository = accountRepository;
+            this.userSessionRepository = userSessionRepository;
+            this.accountBalanceRepository = accountBalanceRepository;
+            this.incomeRepository = incomeRepository;
+            this.monthBufferRepository = monthBufferRepository;
         }
 
-        [WebGet (UriTemplate="")]
+        [WebGet(UriTemplate = "")]
         public IQueryable<Account> Get()
         {
             try
@@ -37,21 +52,76 @@ namespace IncomesAndOutcomes_API.API
         }
 
         //Na verdade, implementar o account resource
-        [WebInvoke (UriTemplate="",Method="POST")]
-        public HttpResponseMessage Post(Account account)
+        [WebInvoke(UriTemplate = "", Method = "POST")]
+        // todo: melhorar o retorno de statuscode na exception
+        public AccountResource Post(AccountPostInput AccountInputPost)
         {
-            try
+           
+            UserSession userSession = userSessionRepository.All.SingleOrDefault(a => a.Id == AccountInputPost.UserSession);
+            if (userSession != null)
             {
+                DateTime today = DateTime.Now;
+                Account account = accountRepository.All.SingleOrDefault(a => a.Name == AccountInputPost.Name &&
+                    a.UserId == userSession.UserId && a.IsDeleted == false);
+                if (account != null)
+                {
+                    throw new HttpResponseException(HttpStatusCode.Conflict);
+                }
+                account = new Account { Name = AccountInputPost.Name, UserId = userSession.UserId };
                 accountRepository.InsertOrUpdate(account);
                 accountRepository.Save();
-                return new HttpResponseMessage();
+                AccountBalance accountBalance = new AccountBalance
+                {
+                    AccountId = account.Id,
+                    Balance = AccountInputPost.InitialValue,
+                    Date = today,
+                };
+
+                accountBalanceRepository.InsertOrUpdate(accountBalance);
+                accountBalanceRepository.Save();
+
+
+                MonthBuffer thisMonthBuffer = monthBufferRepository.All.SingleOrDefault(a => a.Month == today.Month && a.Year == today.Year);
+                if (thisMonthBuffer == null)
+                {
+                    thisMonthBuffer = new MonthBuffer
+                    {
+                        Month = today.Month,
+                        Year = today.Year,
+                    };
+
+                }
+                thisMonthBuffer.Amount += AccountInputPost.InitialValue;
+                monthBufferRepository.InsertOrUpdate(thisMonthBuffer);
+                monthBufferRepository.Save();
+
+                Income income = new Income
+                {
+                    Date = today,
+                    Amount = AccountInputPost.InitialValue,
+                    Memo = String.Format("Valor inicial da conta \"{0}\"", AccountInputPost.Name),
+                    AccountBalanceId = accountBalance.Id,
+                    MonthBufferId = thisMonthBuffer.Id
+                };
+                incomeRepository.InsertOrUpdate(income);
+                incomeRepository.Save();
+                var accountResponse = new AccountResource { Id = account.Id, Name = account.Name, Amount = AccountInputPost.InitialValue };
+                return accountResponse;
+
             }
-            catch
+            else
             {
-                var response = new HttpResponseMessage();
-                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                return response;
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
+
+
         }
+    }
+
+    public class AccountPostInput
+    {
+        public Guid UserSession { get; set; }
+        public string Name { get; set; }
+        public float InitialValue { get; set; }
     }
 }
