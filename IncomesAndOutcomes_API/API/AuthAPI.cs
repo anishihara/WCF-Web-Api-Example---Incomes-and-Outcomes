@@ -6,6 +6,7 @@ using System.ServiceModel;
 using IncomesAndOutcomes_API.Models;
 using System.ServiceModel.Web;
 using IncomesAndOutcomes_API.Resources;
+using Microsoft.ApplicationServer.Http.Dispatcher;
 
 namespace IncomesAndOutcomes_API.API
 {
@@ -27,40 +28,55 @@ namespace IncomesAndOutcomes_API.API
             this.userSessionRepository = userSessionRepository;
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "")]
+        [WebInvoke(Method = "POST", UriTemplate = "LogOn")]
         public Guid LogOn(UserResource userResource)
         {
-            try
-            {
-                User user = userRepository.All.Single(a => a.Email == userResource.Email && a.Password == userResource.Password);
+                User user = userRepository.All.SingleOrDefault(a => a.Email == userResource.Email && a.Password == userResource.Password);
+      
                 if (user != null)
                 {
-                    UserSession userSession = new UserSession();
-                    userSession.OpenSessionTime = DateTime.Now;
-                    userSession.UserId = user.Id;
-                    userSessionRepository.InsertOrUpdate(userSession);
-                    UserSession previousUserSession;
-                    try
+                    if (user.Password == userResource.Password)
                     {
-                          previousUserSession = userSessionRepository.All.Single(a => a.User.Id == user.Id && !a.EndSessionTime.HasValue);
-                          previousUserSession.EndSessionTime = DateTime.Now;
-                          userSessionRepository.InsertOrUpdate(previousUserSession);
-                    }
-                    catch
-                    {
+                        UserSession userSession = new UserSession();
+                        userSession.OpenSessionTime = DateTime.Now;
+                        userSession.UserId = user.Id;
+                        userSessionRepository.InsertOrUpdate(userSession);
+                        UserSession previousUserSession;
+                        try
+                        {
+                            previousUserSession = userSessionRepository.All.Single(a => a.User.Id == user.Id && !a.EndSessionTime.HasValue);
+                            previousUserSession.EndSessionTime = DateTime.Now;
+                            userSessionRepository.InsertOrUpdate(previousUserSession);
+                        }
+                        catch
+                        {
 
+                        }
+                        userSessionRepository.Save();
+                        return userSession.Id;
                     }
-                    userSessionRepository.Save();
-                    return userSession.Id;
 
                 }
-                return Guid.Empty;
+                throw new HttpResponseException(System.Net.HttpStatusCode.Forbidden);
                 
-            }
-            catch
-            {
-                return Guid.Empty;
-            }
+
+        }
+        [WebInvoke(Method = "POST", UriTemplate = "LogOff")]
+        public bool LogOff(Guid UserSession)
+        {
+
+                var userSession = userSessionRepository.Find(UserSession);
+                if (userSession != null)
+                {
+                    if (userSession.EndSessionTime == null)
+                    {
+                        userSession.EndSessionTime = DateTime.Now;
+                        userSessionRepository.InsertOrUpdate(userSession);
+                        userSessionRepository.Save();
+                        return true;
+                    }
+                }
+                throw new HttpResponseException(System.Net.HttpStatusCode.Forbidden);
 
         }
     }

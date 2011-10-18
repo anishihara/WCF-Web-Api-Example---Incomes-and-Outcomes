@@ -57,7 +57,8 @@ namespace IncomesAndOutcomes_API.API
         public AccountResource Post(AccountPostInput AccountInputPost)
         {
            
-            UserSession userSession = userSessionRepository.All.SingleOrDefault(a => a.Id == AccountInputPost.UserSession);
+            UserSession userSession = userSessionRepository.All.SingleOrDefault(a => a.Id == AccountInputPost.UserSession && 
+                a.EndSessionTime != null);
             if (userSession != null)
             {
                 DateTime today = DateTime.Now;
