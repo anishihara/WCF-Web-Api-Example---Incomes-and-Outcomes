@@ -38,6 +38,7 @@ namespace IncomesAndOutcomes_API.API
             this.monthBufferRepository = monthBufferRepository;
         }
 
+        // TODO: deve voltar um resource, nao um model
         [WebGet(UriTemplate = "")]
         public List<Account> Get()
         {
@@ -68,6 +69,7 @@ namespace IncomesAndOutcomes_API.API
             }
         }
 
+        // TODO: deve voltar um resource, nao um model
         [WebGet(UriTemplate = "/{id}")]
         public Account GetAccount(int id)
         {
