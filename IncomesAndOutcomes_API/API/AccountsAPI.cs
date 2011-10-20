@@ -39,11 +39,57 @@ namespace IncomesAndOutcomes_API.API
         }
 
         [WebGet(UriTemplate = "")]
-        public IQueryable<Account> Get()
+        public List<Account> Get()
         {
             try
             {
-                return accountRepository.All;
+                Guid userSessionId = new Guid(WebOperationContext.Current.IncomingRequest.Headers.Get("Authorization"));
+                var userSession = userSessionRepository.Find(userSessionId);
+                if (userSession != null)
+                {
+                    if (userSession.EndSessionTime == null)
+                    {
+                        return accountRepository.All.Where(a => a.UserId == userSession.UserId).ToList();
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                    }
+                }
+                else
+                {
+                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                }
+
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        [WebGet(UriTemplate = "/{id}")]
+        public Account GetAccount(int id)
+        {
+            try
+            {
+                Guid userSessionId = new Guid(HttpRequestHeader.Authorization.ToString());
+                var userSession = userSessionRepository.Find(userSessionId);
+                if (userSession != null)
+                {
+                    if (userSession.EndSessionTime == null)
+                    {
+                        return accountRepository.All.SingleOrDefault(a => a.Id == id && a.UserId == userSession.UserId);
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                    }
+                }
+                else
+                {
+                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                }
             }
             catch
             {
@@ -56,8 +102,8 @@ namespace IncomesAndOutcomes_API.API
         // todo: melhorar o retorno de statuscode na exception
         public AccountResource Post(AccountPostInput AccountInputPost)
         {
-           
-            UserSession userSession = userSessionRepository.All.SingleOrDefault(a => a.Id == AccountInputPost.UserSession && 
+
+            UserSession userSession = userSessionRepository.All.SingleOrDefault(a => a.Id == AccountInputPost.UserSession &&
                 a.EndSessionTime != null);
             if (userSession != null)
             {
