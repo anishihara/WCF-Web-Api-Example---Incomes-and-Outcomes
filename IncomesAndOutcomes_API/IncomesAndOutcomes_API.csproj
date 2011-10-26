@@ -115,8 +115,6 @@
     <Compile Include="API\AccountsAPI.cs" />
     <Compile Include="API\AuthAPI.cs" />
     <Compile Include="Controllers\AccountaController.cs" />
-    <Compile Include="Controllers\AccountBalanceController.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BudgetController.cs" />
     <Compile Include="Controllers\BufferController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
@@ -128,10 +126,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountBalance.cs" />
     <Compile Include="Models\AccountBalanceRepository.cs" />
-    <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AccountRepository.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\BudgetRepository.cs" />

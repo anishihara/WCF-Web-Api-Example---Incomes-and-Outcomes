@@ -9,6 +9,7 @@ using System.ServiceModel.Web;
 using System.Net.Http;
 using Microsoft.ApplicationServer.Http.Dispatcher;
 using System.Net;
+using IncomesAndOutcomes_API.Helpers;
 
 namespace IncomesAndOutcomes_API.API
 {
@@ -16,23 +17,21 @@ namespace IncomesAndOutcomes_API.API
     public class AccountsAPI
     {
         private readonly IAccountRepository accountRepository;
-        private readonly IUserSessionRepository userSessionRepository;
         private readonly IAccountBalanceRepository accountBalanceRepository;
         private readonly IIncomeRepository incomeRepository;
         private readonly IMonthBufferRepository monthBufferRepository;
 
         public AccountsAPI()
-            : this(new AccountRepository(), new UserSessionRepository(),
+            : this(new AccountRepository(),
                 new AccountBalanceRepository(), new IncomeRepository(), new MonthBufferRepository())
         {
         }
 
-        public AccountsAPI(IAccountRepository accountRepository, IUserSessionRepository userSessionRepository,
+        public AccountsAPI(IAccountRepository accountRepository,
             IAccountBalanceRepository accountBalanceRepository, IIncomeRepository incomeRepository,
             IMonthBufferRepository monthBufferRepository)
         {
             this.accountRepository = accountRepository;
-            this.userSessionRepository = userSessionRepository;
             this.accountBalanceRepository = accountBalanceRepository;
             this.incomeRepository = incomeRepository;
             this.monthBufferRepository = monthBufferRepository;
@@ -42,88 +41,61 @@ namespace IncomesAndOutcomes_API.API
         [WebGet(UriTemplate = "")]
         public List<Account> Get()
         {
-            try
+            var userSession = new AuthHelper().Authenticate();
+            if (userSession != null)
             {
-                Guid userSessionId = new Guid(WebOperationContext.Current.IncomingRequest.Headers.Get("Authorization"));
-                var userSession = userSessionRepository.Find(userSessionId);
-                if (userSession != null)
-                {
-                    if (userSession.EndSessionTime == null)
-                    {
-                        return accountRepository.All.Where(a => a.UserId == userSession.UserId).ToList();
-                    }
-                    else
-                    {
-                        throw new HttpResponseException(HttpStatusCode.Unauthorized);
-                    }
-                }
-                else
-                {
-                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
-                }
+                return accountRepository.All.Where(a => a.UserId == userSession.UserId).ToList();
+            }
+            return null;
 
-            }
-            catch
-            {
-                return null;
-            }
+
         }
 
         // TODO: deve voltar um resource, nao um model
         [WebGet(UriTemplate = "/{id}")]
-        public Account GetAccount(int id)
+        public AccountResource GetAccount(int id)
         {
-            try
+            var userSession = new AuthHelper().Authenticate();
+            var account = accountRepository.All.SingleOrDefault(a => a.Id == id && a.UserId == userSession.UserId);
+            if (account != null)
             {
-                Guid userSessionId = new Guid(HttpRequestHeader.Authorization.ToString());
-                var userSession = userSessionRepository.Find(userSessionId);
-                if (userSession != null)
+                var accountBalance = accountBalanceRepository.All.SingleOrDefault(a => a.IsActive && !a.IsDeleted && a.AccountId == account.Id);
+                if (accountBalance != null)
                 {
-                    if (userSession.EndSessionTime == null)
-                    {
-                        return accountRepository.All.SingleOrDefault(a => a.Id == id && a.UserId == userSession.UserId);
-                    }
-                    else
-                    {
-                        throw new HttpResponseException(HttpStatusCode.Unauthorized);
-                    }
-                }
-                else
-                {
-                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                    return new AccountResource { Name = account.Name, Id = account.Id, Amount = accountBalance.Balance };
                 }
             }
-            catch
-            {
-                return null;
-            }
+            return null;
+
         }
 
         //Na verdade, implementar o account resource
         [WebInvoke(UriTemplate = "", Method = "POST")]
         // todo: melhorar o retorno de statuscode na exception
-        public AccountResource Post(AccountPostInput AccountInputPost)
+        public AccountResource Post(AccountResource AccountInput)
         {
 
-            UserSession userSession = userSessionRepository.All.SingleOrDefault(a => a.Id == AccountInputPost.UserSession &&
-                a.EndSessionTime != null);
+            UserSession userSession = new AuthHelper().Authenticate();
             if (userSession != null)
             {
+                float amount = AccountInput.Amount;
+                string accountName = AccountInput.Name;
                 DateTime today = DateTime.Now;
-                Account account = accountRepository.All.SingleOrDefault(a => a.Name == AccountInputPost.Name &&
+                Account account = accountRepository.All.SingleOrDefault(a => a.Name == accountName &&
                     a.UserId == userSession.UserId && a.IsDeleted == false);
                 if (account != null)
                 {
                     throw new HttpResponseException(HttpStatusCode.Conflict);
                 }
-                account = new Account { Name = AccountInputPost.Name, UserId = userSession.UserId };
+                account = new Account { Name = accountName, UserId = userSession.UserId };
                 accountRepository.InsertOrUpdate(account);
                 accountRepository.Save();
                 AccountBalance accountBalance = new AccountBalance
                 {
                     AccountId = account.Id,
-                    Balance = AccountInputPost.InitialValue,
+                    Balance = amount,
                     Date = today,
+                    IsActive = true,
                 };
 
                 accountBalanceRepository.InsertOrUpdate(accountBalance);
@@ -140,21 +112,21 @@ namespace IncomesAndOutcomes_API.API
                     };
 
                 }
-                thisMonthBuffer.Amount += AccountInputPost.InitialValue;
+                thisMonthBuffer.Amount += amount;
                 monthBufferRepository.InsertOrUpdate(thisMonthBuffer);
                 monthBufferRepository.Save();
 
                 Income income = new Income
                 {
                     Date = today,
-                    Amount = AccountInputPost.InitialValue,
-                    Memo = String.Format("Valor inicial da conta \"{0}\"", AccountInputPost.Name),
+                    Amount = amount,
+                    Memo = String.Format("Valor inicial da conta \"{0}\"", accountName),
                     AccountBalanceId = accountBalance.Id,
                     MonthBufferId = thisMonthBuffer.Id
                 };
                 incomeRepository.InsertOrUpdate(income);
                 incomeRepository.Save();
-                var accountResponse = new AccountResource { Id = account.Id, Name = account.Name, Amount = AccountInputPost.InitialValue };
+                var accountResponse = new AccountResource { Id = account.Id, Name = account.Name, Amount = amount };
                 return accountResponse;
 
             }

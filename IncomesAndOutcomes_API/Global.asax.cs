@@ -30,11 +30,11 @@ namespace IncomesAndOutcomes_API
             routes.Add(new ServiceRoute("api/accounts", new HttpServiceHostFactory() { Configuration = config }, typeof(AccountsAPI)));
             routes.Add(new ServiceRoute("api/auth", new HttpServiceHostFactory() { Configuration = config }, typeof(AuthAPI)));
 
-            routes.MapRoute(
+           /* routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
-            );
+            );*/
 
         }
 
@@ -44,7 +44,7 @@ namespace IncomesAndOutcomes_API
 
             System.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<IncomesAndOutcomes_API.Models.IncomesAndOutcomes_APIContext>());
 
-            RegisterGlobalFilters(GlobalFilters.Filters);
+            //RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
         }
     }
