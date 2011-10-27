@@ -39,40 +39,100 @@ namespace IncomesAndOutcomes_API.API
 
         // TODO: deve voltar um resource, nao um model
         [WebGet(UriTemplate = "")]
-        public List<Account> Get()
+        public HttpResponseMessage<List<Account>> Get()
         {
             var userSession = new AuthHelper().Authenticate();
             if (userSession != null)
             {
-                return accountRepository.All.Where(a => a.UserId == userSession.UserId).ToList();
+
+                return new HttpResponseMessage<List<Account>>(HttpStatusCode.OK)
+                {
+                    Content = new ObjectContent<List<Account>>(accountRepository.All.Where(a => a.UserId == userSession.UserId && !a.IsDeleted).ToList()),
+                };
             }
             return null;
 
 
         }
 
-        // TODO: deve voltar um resource, nao um model
         [WebGet(UriTemplate = "/{id}")]
-        public AccountResource GetAccount(int id)
+        public HttpResponseMessage<AccountResource> GetAccount(int id)
         {
             var userSession = new AuthHelper().Authenticate();
-            var account = accountRepository.All.SingleOrDefault(a => a.Id == id && a.UserId == userSession.UserId);
+            var account = accountRepository.All.SingleOrDefault(a => a.Id == id
+                && a.UserId == userSession.UserId
+                && !a.IsDeleted);
             if (account != null)
             {
                 var accountBalance = accountBalanceRepository.All.SingleOrDefault(a => a.IsActive && !a.IsDeleted && a.AccountId == account.Id);
                 if (accountBalance != null)
                 {
-                    return new AccountResource { Name = account.Name, Id = account.Id, Amount = accountBalance.Balance };
+                    return new HttpResponseMessage<AccountResource>(HttpStatusCode.Found)
+                    {
+                        Content = new ObjectContent<AccountResource>(new AccountResource { Name = account.Name, Id = account.Id, Amount = accountBalance.Balance }),
+                    };
                 }
             }
-            return null;
+            return new HttpResponseMessage<AccountResource>(HttpStatusCode.NotFound);
+        }
+
+        [WebInvoke(UriTemplate = "/{id}", Method = "PUT")]
+        public HttpResponseMessage<AccountResource> EditAccount(int id, AccountResource AccountResource)
+        {
+            var userSession = new AuthHelper().Authenticate();
+            var account = accountRepository.All.SingleOrDefault(a => a.Id == id && !a.IsDeleted && a.UserId == userSession.UserId);
+            if (account != null)
+            {
+                var accountBalance = accountBalanceRepository.All.SingleOrDefault(a => a.IsActive && !a.IsDeleted && a.AccountId == account.Id);
+                if (accountBalance != null)
+                {
+                    account.Name = AccountResource.Name;
+                    accountRepository.InsertOrUpdate(account);
+                    accountRepository.Save();
+                    WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.OK;
+                    return new HttpResponseMessage<AccountResource>(HttpStatusCode.OK)
+                    {
+                        Content = new ObjectContent<AccountResource>(new AccountResource { Name = account.Name, Id = account.Id, Amount = accountBalance.Balance }),
+                    };
+                }
+            }
+            return new HttpResponseMessage<AccountResource>(HttpStatusCode.NotFound);
+
+        }
+
+        // Apenas deletar (mudar estado para IsDeleted) se o último balanço for igual a zero
+        [WebInvoke(UriTemplate = "/{id}", Method = "DELETE")]
+        public HttpResponseMessage DeleteAccount(int id)
+        {
+            var userSession = new AuthHelper().Authenticate();
+            var account = accountRepository.All.SingleOrDefault(a => a.Id == id && !a.IsDeleted && a.UserId == userSession.UserId);
+            if (account != null)
+            {
+                var accountBalance = accountBalanceRepository.All.SingleOrDefault(a => a.IsActive &&
+                    !a.IsDeleted &&
+                    a.AccountId == account.Id &&
+                    a.Balance < 0.01 &&
+                    a.Balance > -0.01 );
+                if (accountBalance != null)
+                {
+                    account.IsDeleted = true;
+                    accountRepository.InsertOrUpdate(account);
+                    accountRepository.Save();
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+                return new HttpResponseMessage(HttpStatusCode.NotModified);
+            }
+            else
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
         }
 
         //Na verdade, implementar o account resource
         [WebInvoke(UriTemplate = "", Method = "POST")]
         // todo: melhorar o retorno de statuscode na exception
-        public AccountResource Post(AccountResource AccountInput)
+        public HttpResponseMessage<AccountResource> Add(AccountResource AccountInput)
         {
 
             UserSession userSession = new AuthHelper().Authenticate();
@@ -127,7 +187,11 @@ namespace IncomesAndOutcomes_API.API
                 incomeRepository.InsertOrUpdate(income);
                 incomeRepository.Save();
                 var accountResponse = new AccountResource { Id = account.Id, Name = account.Name, Amount = amount };
-                return accountResponse;
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.Created;
+                return new HttpResponseMessage<AccountResource>(HttpStatusCode.Created)
+                {
+                    Content = new ObjectContent<AccountResource>(accountResponse)
+                };
 
             }
             else
@@ -137,12 +201,5 @@ namespace IncomesAndOutcomes_API.API
 
 
         }
-    }
-
-    public class AccountPostInput
-    {
-        public Guid UserSession { get; set; }
-        public string Name { get; set; }
-        public float InitialValue { get; set; }
     }
 }
